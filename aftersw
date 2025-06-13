@@ -1,0 +1,188 @@
+1.	 Write a Selenium program using Node.js to automate a Google search.
+	
+CODE: 
+const { Builder, By, Key } = require('selenium-webdriver');
+async function googleSearch() {
+  // Start Chrome
+  let driver = await new Builder().forBrowser('chrome').build();
+  try {
+    // Open Google
+    await driver.get('https://www.google.com');
+
+    // Find search bar, type 'Selenium', press Enter
+    await driver.findElement(By.name('q')).sendKeys('Selenium', Key.RETURN);
+    // Wait 3 seconds (so you can see results)
+    await driver.sleep(3000);
+  } finally {
+    // Close browser
+    await driver.quit();
+  }
+}
+
+googleSearch();
+
+
+
+2.	Create a Selenium script in Node.js to open a web page, extract the text
+
+CODE: 
+const { Builder, By, until } = require('selenium-webdriver');
+
+async function extractText(url, elementSelector) {
+  let driver = await new Builder().forBrowser('chrome').build();
+  try {
+    await driver.get(url);
+    let element = await driver.findElement(By.css(elementSelector));
+    let text = await element.getText();
+    console.log('Extracted Text:', text);
+  } catch (error) {
+    console.error('Error:', error);
+  } finally {
+    await driver.quit();
+  }
+}
+
+// Example usage:
+const url = 'https://wikipedia.com/';
+const elementSelector = 'h1'; // CSS selector for the element containing the text
+extractText(url, elementSelector);
+
+
+
+
+3. Write a Selenium script to handle browser navigation (back, Forward, refresh)
+CODE:
+const { Builder, By, Key, until } = require('selenium-webdriver');
+const chrome = require('selenium-webdriver/chrome');
+
+(async function handleBrowserNavigation() {
+  // Set up the WebDriver instance
+  let driver = await new Builder()
+    .forBrowser('chrome')
+    .build();
+
+  try {
+    // Navigate to the first URL (Google)
+    console.log('Navigating to Google...');
+    await driver.get('https://www.google.com');
+    await driver.sleep(2000); // Wait for 2 seconds for the page to load
+
+    // Navigate to a second URL (Example)
+    console.log('Navigating to Wikipedia...');
+    await driver.get('https://www.wikipedia.org/');
+    await driver.sleep(2000); // Wait for 2 seconds for the page to load
+
+    // --- Handle Browser Back Navigation ---
+    console.log('Navigating back...');
+    await driver.navigate().back();
+    await driver.sleep(2000); // Wait for 2 seconds for the page to load
+
+    // --- Handle Browser Forward Navigation ---
+    console.log('Navigating forward...');
+    await driver.navigate().forward();
+    await driver.sleep(2000); // Wait for 2 seconds for the page to load
+
+    // --- Handle Browser Refresh ---
+    console.log('Refreshing the page...');
+    await driver.navigate().refresh();
+    await driver.sleep(2000); // Wait for 2 seconds for the page to refresh
+
+  } catch (err) {
+    console.error('Error:', err);
+  } finally {
+    // Close the browser
+    await driver.quit();
+  }
+})();
+
+
+
+
+
+4. Write a Node.js program using Selenium to count the total number of hyperlinks on the page
+CODE: 
+const { Builder, By } = require('selenium-webdriver');
+async function countLinks(url) {
+  let driver = await new Builder().forBrowser('chrome').build();
+  try {
+    await driver.get(url);
+    let links = await driver.findElements(By.tagName('a'));
+    console.log('Total number of links:', links.length);
+  } finally {
+    await driver.quit();
+  }
+}
+
+const url = 'https://unstop.com';
+countLinks(url);
+
+
+
+
+5. Develop a Selenium script to automate login testing
+CODE: 
+const { Builder, By, until } = require('selenium-webdriver');
+
+async function loginTest() {
+  let driver = await new Builder().forBrowser('chrome').build();
+
+  try {
+    // Step 1: Open the login page
+    await driver.get('https://practicetestautomation.com/practice-test-login');
+
+    // Step 2: Enter username
+    await driver.findElement(By.id('username')).sendKeys('student');
+
+    // Step 3: Enter password
+    await driver.findElement(By.id('password')).sendKeys('Password123');
+
+    // Step 4: Click login button
+    await driver.findElement(By.id('submit')).click();
+
+    // Step 5: Wait for result message
+    await driver.wait(until.elementLocated(By.css('.post-title')), 5000);
+    const message = await driver.findElement(By.css('.post-title')).getText();
+
+    // Step 6: Check if login was successful
+    if (message.includes('Logged In Successfully')) {
+      console.log('✅ Login Test Passed!');
+    } else {
+      console.log('❌ Login Test Failed!');
+    }
+
+  } catch (err) {
+    console.error('❌ Error during test:', err.message);
+  } finally {
+    await driver.quit();
+  }
+}
+
+loginTest();
+
+
+
+
+
+6. Write Selenium script that captures a screenshot
+CODE: 
+const { Builder } = require('selenium-webdriver');
+const chrome = require('selenium-webdriver/chrome');
+const fs = require('fs');
+(async function takeScreenshot() {
+  let driver = await new Builder()
+    .forBrowser('chrome')
+    .build();
+
+  try {
+    await driver.get('https://www.wikipedia.org');
+    // Take a screenshot
+    let screenshot = await driver.takeScreenshot();
+    fs.writeFileSync('screenshot.png', screenshot, 'base64');
+    console.log('Screenshot saved successfully as screenshot.png!'); 
+  } catch (err) {
+    console.error('Error:', err);
+  } finally {
+    await driver.quit();
+  }
+})();
+
